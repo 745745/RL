@@ -11,7 +11,6 @@ table = np.array([0,0,0,0,0,100])
 # 2 actions in each position
 # first row -> move left
 # second row -> move right
-#Q_table=np.random.random((2,6))
 Q_table=np.zeros((2,6))
 
 # prob
