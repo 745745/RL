@@ -2,7 +2,7 @@
 
 
 # *____#
-# * should reach # to win
+# *->current position, reach # to win
 import numpy as np
 
 
@@ -24,7 +24,6 @@ gama=0.9
 r=0.2
 
 action=np.array([-1,1])
-
 
 # [st,st+1,rt,at]
 replay_buffer=[]
