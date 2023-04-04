@@ -6,23 +6,23 @@
 import numpy as np
 
 
-table = np.array([0,0,0,0,0,100])
+table = np.array([0,0,-2,10,-2,20])
 
 # 2 actions in each position
 # first row -> move left
 # second row -> move right
-Q_table=np.zeros((2,6))
+Q_table=np.zeros((3,6))
 
 # prob
 ep=0.2
 
 #return decay
-gama=0.9
+gama=0.3
 
 #learning rate
-r=0.2
+r=0.01
 
-action=np.array([-1,1])
+action=np.array([-1,1,0])
 
 # [st,st+1,rt,at]
 replay_buffer=[]
@@ -34,13 +34,21 @@ def reward(pos):
 # epi-greedy policy
 def choose_action(pos):
     p=np.random.uniform()
+    if pos==0:
+        p = np.array([0, 0.5, 0.5])
+        act = np.random.choice(np.arange(0,3), p=p)
+        return act
+    elif pos==5:
+        p = np.array([0.5, 0, 0.5])
+        act = np.random.choice(np.arange(0,3), p=p)
+        return act
     # choose max Q action
     if p<=1-ep:
         act=np.argmax(Q_table[:, pos])
     else:
-        p=np.array([0.5,0.5])
-        act=np.random.choice(action,p=p)
-    return action[act]
+        p=np.array([0.33,0.33,0.34])
+        act=np.random.choice(np.arange(0,3),p=p)
+    return act
 
 
 def param_upgrade():
@@ -64,20 +72,17 @@ def draw(position):
     print(map)
 
 def train():
-    epoch=10
+    epoch=100
     for i in range(epoch):
         replay_buffer.clear()
         position = 0
         time=0
-        while position != 5:
-            if position==0:
-                act=1
-            else:
-                act=choose_action(position)
-            r=reward(position+act)
-            replay_buffer.append([position,position+act,r,act])
+        while time<50:
+            act=choose_action(position)
+            r=reward(position+action[act])
+            replay_buffer.append([position,position+action[act],r,act])
             param_upgrade()
-            position=position+act
+            position=position+action[act]
             draw(position)
             time+=1
         print(time)
